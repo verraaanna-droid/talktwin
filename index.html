@@ -45,6 +45,9 @@ body{
 .slide.play .E.char{animation:bloom 1.3s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0ms)}
 .slide.play .E.still{animation-name:fadein}
 .slide.play .E.char.rise{animation:riseup 1.5s cubic-bezier(.22,.8,.25,1) both;animation-delay:var(--d,0ms)}
+/* handwritten reveal: text is drawn in left to right after the character has appeared */
+.slide.play .E.write{animation:writein 1.7s cubic-bezier(.3,.6,.2,1) both;animation-delay:var(--d,0ms)}
+@keyframes writein{0%{opacity:0;clip-path:inset(-20% 100% -20% 0);filter:blur(5px)}15%{opacity:1}100%{opacity:1;clip-path:inset(-20% -5% -20% 0);filter:none}}
 @keyframes riseup{from{opacity:0;transform:translateY(150px)}30%{opacity:1}to{opacity:1;transform:none}}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
@@ -135,7 +138,7 @@ body{
   <button id="full" aria-label="Fullscreen">⤢</button>
 </nav>
 
-<script src="slides.js?v=56"></script>
+<script src="slides.js?v=57"></script>
 <script>
 (function(){
 const FONT = {
@@ -205,7 +208,7 @@ function buildText(L){
 
 slides.forEach((S, si) => {
   const sl = document.createElement('section'); sl.className='slide'; sl.setAttribute('aria-label',`Slide ${si+1}`);
-  let order = 0;
+  let order = 0, lastChar = 0;
   const n = S.layers.length;
   S.layers.forEach((L, k) => {
     let node;
@@ -252,7 +255,10 @@ slides.forEach((S, si) => {
     }
     if (node.classList.contains('E')){
       const isChar = L.role==='char';
-      node.style.setProperty('--d', (L.late ? 2300 : isChar ? 150 + order*120 : 380 + Math.min(1700, order*Math.max(14, 1700/n))) + 'ms');
+      let dl = L.late ? 2300 : isChar ? 150 + order*120 : 380 + Math.min(1700, order*Math.max(14, 1700/n));
+      if (isChar) lastChar = Math.max(lastChar, dl);
+      if (L.write){ dl = lastChar + 1100 + (L.write-1)*450; node.classList.add('write'); }
+      node.style.setProperty('--d', dl + 'ms');
       order++;
     }
     sl.appendChild(node);
@@ -267,7 +273,7 @@ const IMGS = {}, loaded = new Set();
 window.__img = (n, map) => { Object.assign(IMGS, map); loaded.add(n);
   els[n-1].querySelectorAll('img[data-src]').forEach(im => { const u = IMGS[im.dataset.src]; if (u) { im.src = u; im.removeAttribute('data-src') } }); };
 function loadBundle(n){ return new Promise(res => { if (loaded.has(n)) return res(); const sc = document.createElement('script');
-  sc.src = `img/s${n}.js?v=56`; sc.onload = sc.onerror = () => res(); document.head.appendChild(sc); }); }
+  sc.src = `img/s${n}.js?v=57`; sc.onload = sc.onerror = () => res(); document.head.appendChild(sc); }); }
 
 /* fit stage */
 function fit(){
