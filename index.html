@@ -66,6 +66,8 @@ body{
 @keyframes blink{0%{opacity:0}92%{opacity:1}93.2%{opacity:0}100%{opacity:0}}
 .m{position:relative}
 .part.earL{animation:earflick 5.2s ease-in-out infinite}
+.part.hairsw{animation:hairsw 6.2s ease-in-out infinite}
+@keyframes hairsw{0%,100%{transform:rotate(-.5deg) skewX(-.6deg)}50%{transform:rotate(.45deg) skewX(.6deg)}}
 .part.earR{animation:earflickR 6.4s ease-in-out infinite;animation-delay:-2.3s}
 .bob>.m{animation:bob var(--t,4.5s) ease-in-out infinite;animation-delay:var(--o,0s)}
 .fg>.m{animation:sway 9s ease-in-out infinite;transform-origin:50% 100%}
@@ -138,7 +140,7 @@ body{
   <button id="full" aria-label="Fullscreen">⤢</button>
 </nav>
 
-<script src="slides.js?v=58"></script>
+<script src="slides.js?v=59"></script>
 <script>
 (function(){
 const FONT = {
@@ -273,7 +275,7 @@ const IMGS = {}, loaded = new Set();
 window.__img = (n, map) => { Object.assign(IMGS, map); loaded.add(n);
   els[n-1].querySelectorAll('img[data-src]').forEach(im => { const u = IMGS[im.dataset.src]; if (u) { im.src = u; im.removeAttribute('data-src') } }); };
 function loadBundle(n){ return new Promise(res => { if (loaded.has(n)) return res(); const sc = document.createElement('script');
-  sc.src = `img/s${n}.js?v=58`; sc.onload = sc.onerror = () => res(); document.head.appendChild(sc); }); }
+  sc.src = `img/s${n}.js?v=59`; sc.onload = sc.onerror = () => res(); document.head.appendChild(sc); }); }
 
 /* fit stage */
 function fit(){
