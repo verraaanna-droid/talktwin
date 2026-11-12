@@ -134,7 +134,7 @@ body{
   <button id="full" aria-label="Fullscreen">⤢</button>
 </nav>
 
-<script src="slides.js?v=53"></script>
+<script src="slides.js?v=54"></script>
 <script>
 (function(){
 const FONT = {
@@ -265,7 +265,7 @@ const IMGS = {}, loaded = new Set();
 window.__img = (n, map) => { Object.assign(IMGS, map); loaded.add(n);
   els[n-1].querySelectorAll('img[data-src]').forEach(im => { const u = IMGS[im.dataset.src]; if (u) { im.src = u; im.removeAttribute('data-src') } }); };
 function loadBundle(n){ return new Promise(res => { if (loaded.has(n)) return res(); const sc = document.createElement('script');
-  sc.src = `img/s${n}.js?v=51`; sc.onload = sc.onerror = () => res(); document.head.appendChild(sc); }); }
+  sc.src = `img/s${n}.js?v=54`; sc.onload = sc.onerror = () => res(); document.head.appendChild(sc); }); }
 
 /* fit stage */
 function fit(){
