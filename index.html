@@ -140,7 +140,7 @@ body{
   <button id="full" aria-label="Fullscreen">⤢</button>
 </nav>
 
-<script src="slides.js?v=64"></script>
+<script src="slides.js?v=65"></script>
 <script>
 (function(){
 const FONT = {
@@ -375,7 +375,17 @@ setInterval(() => {
       else if (t < run + a.A.hold) k = n - 1; }
     if (k === a.k) return;
     const fade = a.k == null || a.k === -1 || k === -1;   // fade only when entering or leaving the sequence
-    a.imgs.forEach((im, i) => { im.style.transition = fade ? 'opacity .3s' : (a.A.xf ? `opacity ${a.A.xf}ms linear` : 'none'); });
+    if (a.A.xf) {
+      // dissolve: the new frame fades in on top of the old one, which is removed only after it is covered
+      const ef = a.A.ef || 300, prev = a.k;
+      a.z = (a.z || 1) + 1;
+      if (k >= 0) { const im = a.imgs[k]; im.style.zIndex = a.z; im.style.transition = `opacity ${fade ? ef : a.A.xf}ms ease-in-out`; im.style.opacity = 1; }
+      if (k === -1) { a.imgs.forEach(im => { im.style.transition = `opacity ${ef}ms ease-in-out`; im.style.opacity = 0; }); }
+      else if (prev != null && prev >= 0 && prev !== k) { const old = a.imgs[prev]; clearTimeout(old._t);
+        old._t = setTimeout(() => { if (a.k !== prev) { old.style.transition = 'none'; old.style.opacity = 0; } }, a.A.xf + 20); }
+      a.k = k; return;
+    }
+    a.imgs.forEach((im, i) => { im.style.transition = fade ? 'opacity .3s' : 'none'; });
     if (k >= 0) a.imgs[k].style.opacity = 1;              // show the new frame first, then hide the old one: no gap
     a.imgs.forEach((im, i) => { if (i !== k) im.style.opacity = 0; });
     a.k = k;
