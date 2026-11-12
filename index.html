@@ -44,6 +44,8 @@ body{
 .slide.play .E{animation:rise .8s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0ms)}
 .slide.play .E.char{animation:bloom 1.3s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0ms)}
 .slide.play .E.still{animation-name:fadein}
+.slide.play .E.char.rise{animation:riseup 1.5s cubic-bezier(.22,.8,.25,1) both;animation-delay:var(--d,0ms)}
+@keyframes riseup{from{opacity:0;transform:translateY(150px)}30%{opacity:1}to{opacity:1;transform:none}}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @keyframes bloom{from{opacity:0;transform:scale(.94) translateY(26px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
@@ -133,7 +135,7 @@ body{
   <button id="full" aria-label="Fullscreen">⤢</button>
 </nav>
 
-<script src="slides.js?v=55"></script>
+<script src="slides.js?v=56"></script>
 <script>
 (function(){
 const FONT = {
@@ -210,7 +212,7 @@ slides.forEach((S, si) => {
     if (L.img){
       node = document.createElement('div');
       const role = L.role || '';
-      node.className = 'L' + (role ? ' '+role : '') + (role==='bg' ? '' : ' E');
+      node.className = 'L' + (role ? ' '+role : '') + (role==='bg'||role==='ledge' ? '' : ' E');
       Object.assign(node.style,{left:L.x+'px',top:L.y+'px',width:L.w+'px',height:L.h+'px'});
       if (L.rot) node.style.rotate = L.rot+'deg';
       const m = document.createElement('div'); m.className='m';
@@ -233,6 +235,7 @@ slides.forEach((S, si) => {
           node.style.webkitMaskComposite = 'source-in'; node.style.maskComposite = 'intersect'; }
         node.style.webkitMaskImage = g; node.style.maskImage = g; }
       if (L.soft) node.classList.add('soft');
+      if (L.rise) node.classList.add('rise');
       if (L.shadow) im.style.filter = `drop-shadow(${L.shadow})`;
       if (L.pivot){ m.style.setProperty('--px', L.pivot[0]+'%'); m.style.setProperty('--py', L.pivot[1]+'%'); }
       if (role==='char'||role==='bob'||role==='drift'){
@@ -264,7 +267,7 @@ const IMGS = {}, loaded = new Set();
 window.__img = (n, map) => { Object.assign(IMGS, map); loaded.add(n);
   els[n-1].querySelectorAll('img[data-src]').forEach(im => { const u = IMGS[im.dataset.src]; if (u) { im.src = u; im.removeAttribute('data-src') } }); };
 function loadBundle(n){ return new Promise(res => { if (loaded.has(n)) return res(); const sc = document.createElement('script');
-  sc.src = `img/s${n}.js?v=54`; sc.onload = sc.onerror = () => res(); document.head.appendChild(sc); }); }
+  sc.src = `img/s${n}.js?v=56`; sc.onload = sc.onerror = () => res(); document.head.appendChild(sc); }); }
 
 /* fit stage */
 function fit(){
